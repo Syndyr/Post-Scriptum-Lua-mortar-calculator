@@ -39,6 +39,12 @@ function findRangeBracket(morta, dist)
 end
 
 os.execute("cls")
+
+print("High precision mode? [Y/N]")
+local a = io.input():read(2)
+local highPrec = a:find("y") ~= nil
+local precMod = 0
+if highPrec then precMod = 2 end
 again = true
 print("Sellect which mortar:\n")
 local mortarOptions = {}
@@ -55,16 +61,17 @@ local mortar = io.read("*n")
 
 
 print("What is your mortar position? I.e: "..string.char(math.random(65, 90))..""..math.random(0,1)..""..math.random(1,9).."-"..math.random(1,9).."-"..math.random(1,9))
-local mortarPos = io.input():read(8)
-mortarPosa = convertGridString(mortarPos)
+
+local mortarPos = io.input():read(8+precMod)
+mortarPosa = convertGridString(mortarPos, highPrec)
 print("What is your target position? I.e: "..string.char(math.random(65, 90))..""..math.random(0,1)..""..math.random(1,9).."-"..math.random(1,9).."-"..math.random(1,9))
 
 local clk = false
 local bearing = 0
 local dist = 0
 
-mortarTargetPos = io.input():read(8)
-mortarTargetPosa = convertGridString(mortarTargetPos)
+mortarTargetPos = io.input():read(8+precMod)
+mortarTargetPosa = convertGridString(mortarTargetPos, highPrec)
 bearing, dist = 360-math.max(math.min(math.deg(mortarPosa:bearing2D(mortarTargetPosa))+180, 360), 0), mortarPosa:dist(mortarTargetPosa)
 while again do
 	os.execute("cls")
@@ -73,8 +80,8 @@ while again do
 	
 	if clk then 
 		print("What is your target position? I.e: "..string.char(math.random(65, 90))..""..math.random(0,1)..""..math.random(1,9).."-"..math.random(1,9).."-"..math.random(1,9))
-		mortarTargetPos = io.input():read(8)
-		mortarTargetPosa = convertGridString(mortarTargetPos)
+		mortarTargetPos = io.input():read(8+precMod)
+		mortarTargetPosa = convertGridString(mortarTargetPos, highPrec)
 		bearing, dist = 360-math.max(math.min(math.deg(mortarPosa:bearing2D(mortarTargetPosa))+180, 360), 0), mortarPosa:dist(mortarTargetPosa)
 	end
 	
@@ -102,7 +109,7 @@ while again do
 	end
 	
 	print("Try another measurement? [Y/N]")
-	a = io.input():read(2)
+	local a = io.input():read(2)
 	
 	if a:find("y") then
 		again = true
